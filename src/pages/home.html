@@ -6,36 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Composting Data</title>
     <link href="../styles/tailwind.styles.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-
+    <script src="../scripts/home.js"></script>
 </head>
 
 <body>
-    <form class="mt-4 text-center">
-        <div class="mb-4 mx-2">
-            <h1 class="mb-2 text-3xl font-bold text-blue-500 md:text-4xl">Compost Calculator</h1>
-            <label class="block  text-lg mb-2 md:text-xl" for="input-text">
-                How much have you Composted?
-            </label>
-            <input
-                class="shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none my-2 w-4/10 focus:shadow-outline px-1/20 py-2 "
-                id="input-text" type="number" pattern="[0-9]*" placeholder="Ex: 7 (no units)" required>
-                <select id="measurement" class="shadow border text-gray-700 my-2 w-5/10 rounded px-1/20 py-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    <option value="" disabled selected>Unit</option>
-                    <option value="kilograms">Kilograms (kg)</option>
-                    <option value="pounds">Pounds (lbs)</option>
-                    <option value="gallons">Gallons (gal)</option>
-                    <option value="liters">Liters (L)</option>
-                  </select>
-        </div>
-        <div class="mx-2">
-            <button
-                class="text-center bg-blue-500 hover:bg-blue-700 hover:transition-all ease-in-out duration-100 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="submit">
-                Submit
-            </button>
-        </div>
-    </form>
+    <form  action="#" onsubmit="return handleFormSubmission(event);" class="mt-4 text-center">
+    <div class="mb-2 mx-2 mt-4 text-center">
+        <h1 class="mb-2 text-3xl font-bold text-blue-500 md:text-4xl">Compost Calculator</h1>
+        <label class="block  text-lg mb-2 md:text-xl" for="input-text">
+            How much have you composted?
+        </label>
+        <input
+            class="shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none my-2 w-4/10 focus:shadow-outline px-1/20 py-2 "
+            id="input-text" type="number" step="0.001" name="amount" pattern="/^\d*\.?\d*$/" placeholder="Ex: 7 (no units)" required>
+        <select id="measurement"
+            class="shadow border text-gray-700 my-2 w-5/10 rounded px-1/20 py-2 focus:ring-blue-500 focus:border-blue-500"
+            required id="measurement">
+            <option value="" disabled selected>Unit</option>
+            <option value="kilograms">Kilograms (kg)</option>
+            <option value="pounds">Pounds (lbs)</option>
+            <option value="gallons">Gallons (gal)</option>
+            <option value="liters">Liters (L)</option>
+        </select>
+    </div>
+    <div class="mx-2 text-center">
+        <button
+            class="text-center bg-blue-500 hover:bg-blue-700 ease-in-out duration-150 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            id="submit">
+            Submit
+        </button>
+    </div>
+</form>
 </body>
 
 </html>
