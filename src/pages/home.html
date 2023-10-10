@@ -6,20 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Composting Data</title>
     <link href="../styles/tailwind.styles.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
 
 <body>
-    <form class="max-w-md mx-auto mt-4">
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="input-text">
-                Enter input text:
+    <form class="max-w-lg mx-auto mt-4">
+        <div class="mb-4 mx-2">
+            <h1 class="mb-2 text-3xl font-bold text-blue-500 md:text-4xl">Compost Calculator</h1>
+            <label class="block  text-lg mb-2 md:text-xl" for="input-text">
+                How much have you Composted?
             </label>
             <input
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="input-text" type="text" placeholder="Enter input text here">
+                class="shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none my-2 w-4/10 focus:shadow-outline px-3 py-2 "
+                id="input-text" type="number" placeholder="Ex: 7" required>
+                <select id="measurement" class="shadow border text-gray-700 my-2 w-5/10 rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="kilograms">Kilograms (kg)</option>
+                    <option value="pounds">Pounds (lbs)</option>
+                    <option value="gallons">Gallons (gal)</option>
+                    <option value="liters">Liters (L)</option>
+                  </select>
         </div>
-        <div class="flex items-center justify-center">
+        <div class="mx-2">
             <button
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit">
