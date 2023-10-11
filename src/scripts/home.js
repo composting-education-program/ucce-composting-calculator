@@ -9,5 +9,9 @@ function handleFormSubmission(event) {
     localStorage.setItem("input", input.value);
     localStorage.setItem("unit", unit.value);
 
+    var display = document.createElement("div");
+    display.innerHTML = "You have composted "+ localStorage.getItem("input") + " " + localStorage.getItem("unit") + " of organic matter";
+    document.getElementById("content").appendChild(display);
+
     return false; // To prevent the form from clearing
 }
