@@ -58,7 +58,7 @@ function createStatsContainerElement(statistic, description){
 
 function createTwoStatsRowContainer(stat1, stat2, desc1, desc2){
     var container = document.createElement("div");
-    container.classList.add("flex", "w-4/5", "md:w-3/12", "mx-auto", "mt-2");
+    container.classList.add("flex", "w-4/5", "md:w-3/12", "mx-auto");
     
     var statCont1 = createStatsContainerElement(stat1, desc1);
     statCont1.classList.remove("md:w-3/12")
