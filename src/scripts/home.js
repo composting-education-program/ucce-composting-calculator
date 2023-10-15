@@ -10,6 +10,8 @@ function handleFormSubmission(event) {
     localStorage.setItem("input", input.value);
     localStorage.setItem("unit", unit.value);
 
+    content.innerHTML = ""; // Clear the content div
+    
     let description = "Nice work! You were in the top "+ localStorage.getItem("input") + "% of composters in Santa Clara.";
     content.appendChild(createInfoContainerElement(description));
 
