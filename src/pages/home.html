@@ -8,6 +8,7 @@
     <link href="../styles/tailwind.styles.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.typekit.net/zvf1otj.css">
     <script src="../scripts/home.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -40,7 +41,31 @@
         </div>
     </form>
     <div id="content">
+        <div>
+            <canvas id="myChart"></canvas>
+          </div>
     </div>
 </body>
-
+<script>
+    const ctx = document.getElementById('myChart');
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+          label: '# of Votes',
+          data: [12, 19, 3, 5, 2, 3],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+</script>
 </html>
