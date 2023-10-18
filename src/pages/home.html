@@ -2,70 +2,50 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Composting Data</title>
-    <link href="../styles/tailwind.styles.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.typekit.net/zvf1otj.css">
-    <script src="../scripts/home.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Composting Data</title>
+  <link href="../styles/tailwind.styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.typekit.net/zvf1otj.css">
+  <script src="../scripts/home.js" type="module"></script>
 </head>
 
 <body>
-    <form action="#" onsubmit="return handleFormSubmission(event);" class="mt-4 text-center">
-        <div class="mb-2 mx-2 mt-4 text-center">
-            <h1 class="mb-2 text-3xl font-bold font-anr text-anr-blue md:text-4xl">Compost Calculator</h1>
-            <label class="block  text-lg mb-2 md:text-xl font-semibold" for="input-text">
-                How much have you composted?
-            </label>
-            <input
-                class="shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none my-2 w-4/10 focus:shadow-outline px-1/20 py-2 "
-                id="input-text" type="number" step="any" name="amount" pattern="/^\d*\.?\d*$/"
-                placeholder="Ex: 7 (no units)" required>
-            <select id="measurement"
-                class="shadow border text-gray-700 my-2 w-5/10 rounded px-1/20 py-2 focus:ring-blue-500 focus:border-blue-500"
-                required id="measurement">
-                <option value="" disabled selected>Unit</option>
-                <option value="kilograms">Kilograms (kg)</option>
-                <option value="pounds">Pounds (lbs)</option>
-                <option value="gallons">Gallons (gal)</option>
-                <option value="liters">Liters (L)</option>
-            </select>
-        </div>
-        <div class="mx-2 text-center">
-            <button
-                class="text-center text-white bg-anr-light-blue hover:bg-anr-blue ease-in-out duration-150 font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                id="submit">
-                Submit
-            </button>
-        </div>
-    </form>
-    <div id="content">
-        <div>
-            <canvas id="myChart"></canvas>
-          </div>
+  <script src="../../node_modules/chart.js/dist/chart.umd.js"></script>
+
+  <form action="#" onsubmit="return handleFormSubmission(event);" class="mt-4 text-center">
+    <div class="mb-2 mx-2 mt-4 text-center">
+      <h1 class="mb-2 text-3xl font-bold font-anr text-anr-blue md:text-4xl">Santa Clara Composting Statistics</h1>
+      <label class="block  text-lg mb-2 md:text-xl font-semibold" for="input-text">
+        How much have you composted?
+      </label>
+      <input
+        class="shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none my-2 w-4/10 focus:shadow-outline px-1/20 py-2 "
+        id="input-text" type="number" step="any" name="amount" pattern="/^\d*\.?\d*$/" placeholder="Ex: 7 (no units)"
+        required>
+      <select id="measurement"
+        class="shadow border text-gray-700 my-2 w-5/10 rounded px-1/20 py-2 focus:ring-blue-500 focus:border-blue-500"
+        required id="measurement">
+        <option value="" disabled selected>Unit</option>
+        <option value="kilograms">Kilograms (kg)</option>
+        <option value="pounds">Pounds (lbs)</option>
+        <option value="gallons">Gallons (gal)</option>
+        <option value="liters">Liters (L)</option>
+      </select>
     </div>
+    <div class="mx-2 text-center">
+      <button
+        class="text-center text-white bg-anr-light-blue hover:bg-anr-blue ease-in-out duration-150 font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        id="submit">
+        Submit
+      </button>
+    </div>
+  </form>
+  <div id="content">
+    <div>
+      <canvas id="myChart"></canvas>
+    </div>
+  </div>
 </body>
-<script>
-    const ctx = document.getElementById('myChart');
-  
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-          label: '# of Votes',
-          data: [12, 19, 3, 5, 2, 3],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-</script>
+
 </html>
