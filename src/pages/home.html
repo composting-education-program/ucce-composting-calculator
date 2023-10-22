@@ -21,11 +21,11 @@
       class="mx-auto mt-4 w-4/5 md:flex md:w-3/5 md:justify-between md:text-center"
       id="statistics-container"
     >
-      <div id="left-flex-container" class="border-1 relative md:w-[40%]">
+      <div id="left-flex-container" class="relative md:w-[40%]">
         <canvas id="pie-chart"></canvas>
       </div>
       <div id="right-flex-container" class="relative md:ml-4 md:w-[59%]">
-        <canvas id="bar-chart" class="border-1"></canvas>
+        <canvas id="bar-chart"></canvas>
       </div>
     </div>
 
@@ -36,6 +36,10 @@
           for="input-text"
         >
           How much have you composted?
+          <p class="mt-2 text-lg font-normal">
+            Use this composting calculator to see statistics about your own
+            composting efforts.
+          </p>
         </label>
         <input
           class="w-4/10 focus:shadow-outline px-1/20 my-2 appearance-none rounded border py-2 leading-tight text-gray-700 shadow focus:outline-none"
