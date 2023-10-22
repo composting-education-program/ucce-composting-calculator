@@ -6,32 +6,33 @@
     <title>Composting Data</title>
     <link href="../styles/tailwind.styles.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://use.typekit.net/zvf1otj.css" />
-    <script src="../scripts/home.js" type="module"></script>
+    <script src="../../node_modules/chart.js/dist/chart.umd.js"></script>
+    <script src="../scripts/home.js"></script>
   </head>
 
   <body>
-    <script src="../../node_modules/chart.js/dist/chart.umd.js"></script>
     <h1
       class="mb-2 mt-4 text-center font-anr text-3xl font-bold text-anr-blue md:text-4xl"
     >
       Santa Clara Composting Statistics
     </h1>
 
-    <div class="md:flex" id="statistics-container">
-      <div>
-        <canvas id="myChart"></canvas>
+    <div
+      class="mx-auto mt-4 w-4/5 md:flex md:w-3/5 md:justify-between md:text-center"
+      id="statistics-container"
+    >
+      <div id="left-flex-container" class="border-1 relative md:w-[40%]">
+        <canvas id="pie-chart"></canvas>
       </div>
-      <div></div>
+      <div id="right-flex-container" class="relative md:ml-4 md:w-[59%]">
+        <canvas id="bar-chart" class="border-1"></canvas>
+      </div>
     </div>
 
-    <form
-      action="#"
-      onsubmit="return handleFormSubmission(event);"
-      class="mt-4 text-center"
-    >
+    <div class="mt-4 text-center">
       <div class="mx-2 mb-2 mt-4 text-center">
         <label
-          class="mb-2 block text-lg font-semibold md:text-xl"
+          class="mb-2 block text-xl font-semibold md:text-2xl"
           for="input-text"
         >
           How much have you composted?
@@ -67,7 +68,7 @@
           Submit
         </button>
       </div>
-    </form>
-    <div id="user-input-content"></div>
+    </div>
+    <div id="user-input-content" class="mb-5"></div>
   </body>
 </html>

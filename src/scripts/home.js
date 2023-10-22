@@ -1,11 +1,11 @@
-//import * from '../../node_modules/chart.js/auto';
+window.onload = function () {
+  document
+    .getElementById("submit")
+    .addEventListener("click", handleFormSubmission);
+  createStatistics();
+};
 
-window.onload = createStatistics();
-
-function handleFormSubmission(event) {
-  event.preventDefault(); // Prevent the form from submitting
-
-  // Get the form input values
+function handleFormSubmission() {
   var input = document.getElementById("input-text");
   var unit = document.getElementById("measurement");
   var content = document.getElementById("user-input-content");
@@ -20,20 +20,25 @@ function handleFormSubmission(event) {
     "Nice work! You were in the top " +
     localStorage.getItem("input") +
     "% of composters in Santa Clara.";
-  content.appendChild(createInfoContainerElement(description));
+  content.appendChild(createInfoContainerElement(description, "4/5", "1/2"));
 
   let stat = "1.5";
   let desc = "kg of CO2 saved";
 
-  content.appendChild(createStatsContainerElement(stat, desc));
+  content.appendChild(createStatsContainerElement(stat, desc, "4/5", "1/2"));
 
   let stat2 = "3";
   let desc2 = "miles driven";
-  content.appendChild(createTwoStatsRowContainer(stat, stat2, desc, desc2));
-  return false; // To prevent the form from clearing
+  content.appendChild(
+    createTwoStatsRowContainer(stat, stat2, desc, desc2, "4/5", "1/2"),
+  );
 }
 
-function createInfoContainerElement(description) {
+function createInfoContainerElement(
+  description,
+  mobileWidth = "4/5",
+  desktopWidth = "3/12",
+) {
   var display = document.createElement("div");
   display.innerHTML = description;
   display.classList.add(
@@ -44,8 +49,8 @@ function createInfoContainerElement(description) {
     "rounded",
     "p-4",
     "mt-4",
-    "md:w-3/12",
-    "w-4/5",
+    `md:w-${desktopWidth}`,
+    `w-${mobileWidth}`,
     "mx-auto",
   );
 
@@ -56,7 +61,12 @@ function createInfoContainerElement(description) {
   return display;
 }
 
-function createStatsContainerElement(statistic, description) {
+function createStatsContainerElement(
+  statistic,
+  description,
+  width = "4/5",
+  desktopWidth = "3/12",
+) {
   var container = document.createElement("div");
   container.classList.add(
     "p-8",
@@ -64,8 +74,8 @@ function createStatsContainerElement(statistic, description) {
     "border",
     "border-gray-300",
     "rounded-3xl",
-    "w-4/5",
-    "md:w-3/12",
+    `w-${width}`,
+    `md:w-${desktopWidth}`,
     "mx-auto",
     "mt-2",
   );
@@ -98,9 +108,21 @@ function createStatsContainerElement(statistic, description) {
   return container;
 }
 
-function createTwoStatsRowContainer(stat1, stat2, desc1, desc2) {
+function createTwoStatsRowContainer(
+  stat1,
+  stat2,
+  desc1,
+  desc2,
+  mobileWidth = "4/5",
+  desktopWidth = "3/12",
+) {
   var container = document.createElement("div");
-  container.classList.add("flex", "w-4/5", "md:w-3/12", "mx-auto");
+  container.classList.add(
+    "flex",
+    `w-${mobileWidth}`,
+    `md:w-${desktopWidth}`,
+    "mx-auto",
+  );
 
   var statCont1 = createStatsContainerElement(stat1, desc1);
   statCont1.classList.remove("md:w-3/12");
@@ -116,8 +138,8 @@ function createTwoStatsRowContainer(stat1, stat2, desc1, desc2) {
 }
 
 function createStatistics() {
-  const ctx = document.getElementById("myChart");
-  var leChart = new Chart(ctx, {
+  const pieChartElement = document.getElementById("pie-chart").getContext("2d");
+  new Chart(pieChartElement, {
     type: "pie",
     data: {
       labels: ["Red", "Blue", "Yellow", "Green"],
@@ -130,6 +152,9 @@ function createStatistics() {
       ],
     },
     options: {
+      responsive: true,
+      aspectRatio: 1,
+      maintainAspectRatio: true,
       scales: {
         y: {
           beginAtZero: true,
@@ -137,8 +162,34 @@ function createStatistics() {
       },
     },
   });
-  leChart.options.aspectRatio = 1;
-  leChart.options.maintainAspectRatio = true;
-  ctx.parentNode.style.height = "300px";
-  ctx.parentNode.style.width = "300px";
+
+  const barChartElement = document.getElementById("bar-chart").getContext("2d");
+  new Chart(barChartElement, {
+    type: "bar",
+    data: {
+      labels: ["Red", "Blue", "Yellow", "Green"],
+      datasets: [
+        {
+          label: "# of Votes",
+          data: [12, 19, 3, 5],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      aspectRatio: 2.2,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+
+  const rightChartContainer = document.getElementById("right-flex-container");
+  rightChartContainer.appendChild(
+    createInfoContainerElement("Some more statistics go here!", "1", "1"),
+  );
 }
