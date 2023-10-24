@@ -6,32 +6,77 @@ window.onload = function () {
 };
 
 function handleFormSubmission() {
-  var input = document.getElementById("input-text");
-  var unit = document.getElementById("measurement");
   var content = document.getElementById("user-input-content");
-
-  // Store the input values in local storage
-  localStorage.setItem("input", input.value);
-  localStorage.setItem("unit", unit.value);
-
   content.innerHTML = ""; // Clear the content div
 
-  let description =
-    "Nice work! You were in the top " +
-    localStorage.getItem("input") +
-    "% of composters in Santa Clara.";
-  content.appendChild(createInfoContainerElement(description, "4/5", "1/2"));
+  if (
+    document.getElementById("input-text").value.trim() == "" ||
+    document.getElementById("measurement").value == ""
+  ) {
+    formValidation();
+  } else {
+    if (document.getElementById("form-validation-alert") != null) {
+      document.getElementById("form-validation-alert").remove();
+    }
+    var input = document.getElementById("input-text");
+    var unit = document.getElementById("measurement");
 
-  let stat = "1.5";
-  let desc = "kg of CO2 saved";
+    // Store the input values in local storage
+    localStorage.setItem("input", input.value);
+    localStorage.setItem("unit", unit.value);
 
-  content.appendChild(createStatsContainerElement(stat, desc, "4/5", "1/2"));
+    let description =
+      "Nice work! You were in the top " +
+      localStorage.getItem("input") +
+      "% of composters in Santa Clara.";
+    content.appendChild(createInfoContainerElement(description, "4/5", "1/2"));
 
-  let stat2 = "3";
-  let desc2 = "miles driven";
-  content.appendChild(
-    createTwoStatsRowContainer(stat, stat2, desc, desc2, "4/5", "1/2"),
-  );
+    let kgCo2 = convertToKgCO2(input.value, unit.value).toFixed(2);
+    let kgDesc = "kg of CO2 saved";
+
+    let tonsOfCo2 = kgCo2 / 1000;
+
+    let milesDriven = convertToMilesDriven(tonsOfCo2).toFixed(2);
+    let mdDesc = "miles driven";
+
+    let smartPhonesCharged = convertToSmartPhonesCharged(tonsOfCo2).toFixed(2);
+    let spDesc = "smartphones charged";
+
+    let gallonsOfGas = convertToGasConsumed(tonsOfCo2).toFixed(2);
+    let gogDesc = "gallons of gas consumed";
+
+    let treeSeedlingsGrown = convertToTreeSeedlingsGrown(tonsOfCo2).toFixed(2);
+    let tsgDesc = "tree seedlings grown for 10 years";
+
+    let acresOfForest = convertToAcresOfForest(tonsOfCo2).toFixed(2);
+    let aofDesc = "acres of forest in one year";
+
+    content.appendChild(
+      createStatsContainerElement(kgCo2, kgDesc, "4/5", "1/2"),
+    );
+
+    content.appendChild(
+      createTwoStatsRowContainer(
+        milesDriven,
+        smartPhonesCharged,
+        mdDesc,
+        spDesc,
+        "4/5",
+        "1/2",
+      ),
+    );
+
+    content.appendChild(
+      createTwoStatsRowContainer(
+        gallonsOfGas,
+        treeSeedlingsGrown,
+        gogDesc,
+        tsgDesc,
+        "4/5",
+        "1/2",
+      ),
+    );
+  }
 }
 
 function createInfoContainerElement(
@@ -192,4 +237,70 @@ function createStatistics() {
   rightChartContainer.appendChild(
     createInfoContainerElement("Some more statistics go here!", "1", "1"),
   );
+}
+
+function convertToKgCO2(input, unit) {
+  if (unit == "kilograms") {
+    // Convert from kg to lbs.
+    input *= 2.20462;
+  }
+  if (unit == "gallons") {
+    // Convert from gallons to lbs.
+    input *= 6.18891540495;
+  }
+  if (unit == "liters") {
+    // Convert from liters to lbs.
+    input *= 1.63493925492;
+  }
+
+  // Convert from lbs to kg CO2 saved.
+  const KgCO2SavedPerPound = 0.1814;
+  return input * KgCO2SavedPerPound;
+}
+
+function convertToMilesDriven(MetricTonsOfCo2) {
+  return MetricTonsOfCo2 / 0.00039;
+}
+
+function convertToSmartPhonesCharged(MetricTonsOfCo2) {
+  return MetricTonsOfCo2 / 0.00000822;
+}
+
+function convertToGasConsumed(MetricTonsOfCo2) {
+  return MetricTonsOfCo2 / 0.008887;
+}
+
+function convertToTreeSeedlingsGrown(MetricTonsOfCo2) {
+  return MetricTonsOfCo2 / 0.06;
+}
+
+function convertToAcresOfForest(MetricTonsOfCo2) {
+  return MetricTonsOfCo2 / 0.84;
+}
+
+function formValidation() {
+  var alert =
+    document.getElementById("form-validation-alert") != null
+      ? document.getElementById("form-validation-alert")
+      : document.createElement("div");
+  alert.id = "form-validation-alert";
+  var error = "";
+  if (
+    document.getElementById("input-text").value.trim() == "" &&
+    document.getElementById("measurement").value == ""
+  ) {
+    error = "Please enter a valid quantity and unit for composting";
+  } else if (document.getElementById("input-text").value.trim() == "") {
+    error = "Please enter a valid quantity for composting.";
+  } else {
+    error = "Please enter a valid unit for composting.";
+  }
+  alert.innerHTML =
+    `<div class="w-4/5 md:w-[40%] mx-auto bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+    <strong class="font-bold">Uh-oh! That's not how much you composted!</strong>
+    <span class="block sm:inline">` +
+    error +
+    `</span>
+  </div>`;
+  document.getElementById("form").appendChild(alert);
 }
