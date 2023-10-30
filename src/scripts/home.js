@@ -1,3 +1,14 @@
+// GOOGLE SHEETS
+/*
+const CLIENT_ID = '<YOUR_CLIENT_ID>';
+const API_KEY = '<YOUR_API_KEY>';
+
+var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];// not sure if this should be changed?
+
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+*/
+
+
 window.onload = function () {
   document
     .getElementById("submit")
@@ -304,3 +315,40 @@ function formValidation() {
   </div>`;
   document.getElementById("form").appendChild(alert);
 }
+// GOOGLE SHEETS 
+/*
+
+function handleClientLoad() {
+  gapi.load('client', initClient);
+}
+
+function initClient() {
+        gapi.client.init({
+          apiKey: API_KEY,
+          clientId: CLIENT_ID,
+          discoveryDocs: DISCOVERY_DOCS,
+          scope: SCOPES
+        }).then(function () {
+          listMajors();
+        }, function(error) {
+          appendPre(JSON.stringify(error, null, 2));
+        });
+}
+
+function getValues(spreadsheetId, range, callback) {
+  try {
+    gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: spreadsheetId,
+      range: range,
+    }).then((response) => {
+      const result = response.result;
+      const numRows = result.values ? result.values.length : 0;
+      console.log(`${numRows} rows retrieved.`);
+      if (callback) callback(response);
+    });
+  } catch (err) {
+    document.getElementById('content').innerText = err.message;
+    return;
+  }
+}
+*/
