@@ -8,12 +8,26 @@ var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
 */
 
-
 window.onload = function () {
   document
     .getElementById("submit")
     .addEventListener("click", handleFormSubmission);
   createStatistics();
+
+  // Live form validation.
+  const inputField = document.getElementById("input-text");
+
+  inputField.addEventListener("input", function (event) {
+    const inputValue = event.target.value;
+    const isValidInput = /^\d*\.?\d*$/.test(inputValue); // Regular expression to check for rational numbers
+
+    if (!isValidInput) {
+      inputField.value = inputField.value.substring(
+        0,
+        inputField.value.length - 1,
+      ); // Clear the last inputted char if it was invalid.
+    }
+  });
 };
 
 function handleFormSubmission() {
@@ -315,7 +329,7 @@ function formValidation() {
   </div>`;
   document.getElementById("form").appendChild(alert);
 }
-// GOOGLE SHEETS 
+// GOOGLE SHEETS
 /*
 
 function handleClientLoad() {
