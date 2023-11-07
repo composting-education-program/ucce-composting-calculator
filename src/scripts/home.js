@@ -7,6 +7,11 @@ var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"
 
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
 */
+var carIconSrc = "../images/car.png";
+var phoneIconSrc = "../images/charging.png";
+var gasIconSrc = "../images/gas-station.png";
+var treeIconSrc = "../images/plant.png";
+var carbonIconSrc = "../images/carbon-capture.png";
 
 window.onload = function () {
   document
@@ -77,7 +82,7 @@ function handleFormSubmission() {
     let aofDesc = "acres of forest in one year";
 
     content.appendChild(
-      createStatsContainerElement(kgCo2, kgDesc, "4/5", "1/2"),
+      createStatsContainerElement(kgCo2, kgDesc, carbonIconSrc, "4/5", "1/2"),
     );
 
     content.appendChild(
@@ -86,6 +91,8 @@ function handleFormSubmission() {
         smartPhonesCharged,
         mdDesc,
         spDesc,
+        carIconSrc,
+        phoneIconSrc,
         "4/5",
         "1/2",
       ),
@@ -97,6 +104,8 @@ function handleFormSubmission() {
         treeSeedlingsGrown,
         gogDesc,
         tsgDesc,
+        gasIconSrc,
+        treeIconSrc,
         "4/5",
         "1/2",
       ),
@@ -134,6 +143,7 @@ function createInfoContainerElement(
 function createStatsContainerElement(
   statistic,
   description,
+  iconSrc,
   width = "4/5",
   desktopWidth = "3/12",
 ) {
@@ -162,7 +172,7 @@ function createStatsContainerElement(
   );
   stat.innerHTML = statistic;
 
-  var desc = document.createElement("p");
+  var desc = document.createElement("span");
   desc.classList.add(
     "font-heading",
     "mb-2",
@@ -172,8 +182,15 @@ function createStatsContainerElement(
   );
   desc.innerHTML = description;
 
+  var icon = document.createElement("img");
+  icon.classList.add("inline", "ml-2");
+  icon.src = iconSrc;
+  icon.alt = "icon";
+  icon.style.height = "30px"; // adjust the height as per your requirement
+
   container.appendChild(stat);
   container.appendChild(desc);
+  container.appendChild(icon);
 
   return container;
 }
@@ -183,6 +200,8 @@ function createTwoStatsRowContainer(
   stat2,
   desc1,
   desc2,
+  icon1,
+  icon2,
   mobileWidth = "4/5",
   desktopWidth = "3/12",
 ) {
@@ -194,10 +213,10 @@ function createTwoStatsRowContainer(
     "mx-auto",
   );
 
-  var statCont1 = createStatsContainerElement(stat1, desc1);
+  var statCont1 = createStatsContainerElement(stat1, desc1, icon1);
   statCont1.classList.remove("md:w-3/12");
   statCont1.classList.add("mr-1", "md:w-1/2");
-  var statCont2 = createStatsContainerElement(stat2, desc2);
+  var statCont2 = createStatsContainerElement(stat2, desc2, icon2);
   statCont2.classList.remove("md:w-3/12");
   statCont2.classList.add("ml-1", "md:w-1/2");
 
@@ -348,21 +367,25 @@ function initClient() {
           appendPre(JSON.stringify(error, null, 2));
         });
 }
-
+*/
+// Food Waste: spreadsheetID = 1101617029, Range=D2
+// Yard Waste: spreadsheetID = 1101617029, Range=E2
+// Total Waste: spreadsheetID = 1101617029, Range=F2
 function getValues(spreadsheetId, range, callback) {
   try {
-    gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: spreadsheetId,
-      range: range,
-    }).then((response) => {
-      const result = response.result;
-      const numRows = result.values ? result.values.length : 0;
-      console.log(`${numRows} rows retrieved.`);
-      if (callback) callback(response);
-    });
+    gapi.client.sheets.spreadsheets.values
+      .get({
+        spreadsheetId: spreadsheetId,
+        range: range,
+      })
+      .then((response) => {
+        const result = response.result;
+        const numRows = result.values ? result.values.length : 0;
+        console.log(`${numRows} rows retrieved.`);
+        if (callback) callback(response);
+      });
   } catch (err) {
-    document.getElementById('content').innerText = err.message;
+    document.getElementById("content").innerText = err.message;
     return;
   }
 }
-*/
