@@ -1,12 +1,3 @@
-// GOOGLE SHEETS
-/*
-const CLIENT_ID = '<YOUR_CLIENT_ID>';
-const API_KEY = '<YOUR_API_KEY>';
-
-var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];// not sure if this should be changed?
-
-const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
-*/
 var carIconSrc = "../images/car.png";
 var phoneIconSrc = "../images/charging.png";
 var gasIconSrc = "../images/gas-station.png";
@@ -17,7 +8,6 @@ window.onload = function () {
   document
     .getElementById("submit")
     .addEventListener("click", handleFormSubmission);
-  createStatistics();
 
   // Live form validation.
   const inputField = document.getElementById("input-text");
@@ -226,63 +216,6 @@ function createTwoStatsRowContainer(
   return container;
 }
 
-function createStatistics() {
-  const pieChartElement = document.getElementById("pie-chart").getContext("2d");
-  new Chart(pieChartElement, {
-    type: "pie",
-    data: {
-      labels: ["Red", "Blue", "Yellow", "Green"],
-      datasets: [
-        {
-          label: "# of Votes",
-          data: [12, 19, 3, 5],
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      aspectRatio: 1,
-      maintainAspectRatio: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-
-  const barChartElement = document.getElementById("bar-chart").getContext("2d");
-  new Chart(barChartElement, {
-    type: "bar",
-    data: {
-      labels: ["Red", "Blue", "Yellow", "Green"],
-      datasets: [
-        {
-          label: "# of Votes",
-          data: [12, 19, 3, 5],
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      aspectRatio: 2.2,
-      maintainAspectRatio: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-
-  const rightChartContainer = document.getElementById("right-flex-container");
-  rightChartContainer.appendChild(
-    createInfoContainerElement("Some more statistics go here!", "1", "1"),
-  );
-}
-
 function convertToKgCO2(input, unit) {
   if (unit == "kilograms") {
     // Convert from kg to lbs.
@@ -348,44 +281,174 @@ function formValidation() {
   </div>`;
   document.getElementById("form").appendChild(alert);
 }
-// GOOGLE SHEETS
-/*
+
+// Load data and create charts using Google Sheets API
+
+const DISCOVERY_DOCS = [
+  "https://sheets.googleapis.com/$discovery/rest?version=v4",
+];
 
 function handleClientLoad() {
-  gapi.load('client', initClient);
+  gapi.load("client", initClient);
 }
 
 function initClient() {
-        gapi.client.init({
-          apiKey: API_KEY,
-          clientId: CLIENT_ID,
-          discoveryDocs: DISCOVERY_DOCS,
-          scope: SCOPES
-        }).then(function () {
-          listMajors();
-        }, function(error) {
-          appendPre(JSON.stringify(error, null, 2));
-        });
-}
-*/
-// Food Waste: spreadsheetID = 1101617029, Range=D2
-// Yard Waste: spreadsheetID = 1101617029, Range=E2
-// Total Waste: spreadsheetID = 1101617029, Range=F2
-function getValues(spreadsheetId, range, callback) {
   try {
-    gapi.client.sheets.spreadsheets.values
-      .get({
-        spreadsheetId: spreadsheetId,
-        range: range,
+    gapi.client
+      .init({
+        apiKey: "AIzaSyAalwjvT0D5TWInJchaijnw6L7iap6nCJ0",
+        discoveryDocs: DISCOVERY_DOCS,
       })
-      .then((response) => {
-        const result = response.result;
-        const numRows = result.values ? result.values.length : 0;
-        console.log(`${numRows} rows retrieved.`);
-        if (callback) callback(response);
+      .then(function () {
+        loadSheets();
       });
-  } catch (err) {
-    document.getElementById("content").innerText = err.message;
-    return;
+  } catch (e) {
+    console.log(e);
   }
+}
+
+function loadSheets() {
+  const spreadsheetId = "1a2lu7WKtuDUc8pVww3tYwzoSUcgwdtpoWC1CxdEGaoI";
+  const sheetName = "Sheet1";
+
+  gapi.client.sheets.spreadsheets.values
+    .get({
+      spreadsheetId,
+      range: sheetName,
+    })
+    .then(
+      function (response) {
+        const values = response.result.values;
+        totalFoodCompost = values[1][3];
+        totalYardCompost = values[1][4];
+        foodWasteMonth1 = values[3][5];
+        foodWasteMonth2 = values[3][6];
+        foodWasteMonth3 = values[3][7];
+        foodWasteMonth4 = values[3][8];
+        foodWasteDataByMonth = [
+          foodWasteMonth1,
+          foodWasteMonth2,
+          foodWasteMonth3,
+          foodWasteMonth4,
+        ];
+        yardWasteMonth1 = values[4][5];
+        yardWasteMonth2 = values[4][6];
+        yardWasteMonth3 = values[4][7];
+        yardWasteMonth4 = values[4][8];
+        yardWasteDataByMonth = [
+          yardWasteMonth1,
+          yardWasteMonth2,
+          yardWasteMonth3,
+          yardWasteMonth4,
+        ];
+
+        let averageTotalCompostPerUser = 0;
+        for (var i = 1; i < values.length; i++) {
+          averageTotalCompostPerUser += parseInt(values[i][0]);
+          averageTotalCompostPerUser += parseInt(values[i][1]);
+        }
+        averageTotalCompostPerUser =
+          averageTotalCompostPerUser / (values.length - 1);
+        createCharts(
+          totalFoodCompost,
+          totalYardCompost,
+          foodWasteDataByMonth,
+          yardWasteDataByMonth,
+          averageTotalCompostPerUser,
+        );
+      },
+      function (response) {
+        console.error(
+          "Error loading sheet data:",
+          response.result.error.message,
+        );
+      },
+    );
+}
+
+function createCharts(
+  totalFoodCompost,
+  totalYardCompost,
+  foodWasteDataByMonth,
+  yardWasteDataByMonth,
+  averageTotalCompostPerUser,
+) {
+  const pieChartElement = document.getElementById("pie-chart").getContext("2d");
+  new Chart(pieChartElement, {
+    type: "pie",
+    data: {
+      labels: ["Food Waste (gallons)", "Yard Waste (gallons)"],
+      datasets: [
+        {
+          labels: [],
+          data: [totalFoodCompost, totalYardCompost],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: "Food Waste vs Yard Waste",
+        },
+      },
+      responsive: true,
+      aspectRatio: 1,
+      maintainAspectRatio: true,
+    },
+  });
+
+  const stackedBarChartElement = document
+    .getElementById("bar-chart")
+    .getContext("2d");
+  new Chart(stackedBarChartElement, {
+    type: "bar",
+    data: {
+      labels: ["June 2023", "July 2023", "August 2023", "September 2023"],
+      datasets: [
+        {
+          label: "Food Waste (gallons)",
+          data: foodWasteDataByMonth,
+          borderWidth: 1,
+        },
+        {
+          label: "Yard Waste (gallons)",
+          data: yardWasteDataByMonth,
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: "Food Waste vs Yard Waste by Month",
+        },
+      },
+      responsive: true,
+      aspectRatio: 1.9,
+      maintainAspectRatio: true,
+      scales: {
+        x: {
+          stacked: true,
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          max: 200,
+        },
+      },
+    },
+  });
+  const rightChartContainer = document.getElementById("right-flex-container");
+  rightChartContainer.appendChild(
+    createInfoContainerElement(
+      "Average compost per UCCE survey respondent: " +
+        averageTotalCompostPerUser +
+        " gallons",
+      "1",
+      "1",
+    ),
+  );
 }

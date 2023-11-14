@@ -7,7 +7,13 @@
     <link href="../styles/tailwind.styles.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://use.typekit.net/zvf1otj.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../scripts/home.js"></script>
+    <script
+      async
+      defer
+      src="https://apis.google.com/js/api.js"
+      onload="handleClientLoad()"
+    ></script>
+    <script type="text/javascript" src="../scripts/home.js"></script>
   </head>
 
   <body>
@@ -70,12 +76,9 @@
     <div id="user-input-content" class="mb-5"></div>
   </body>
   <!-- GOOGLE SHEETS API -->
-  
 
   <!-- <script async defer src="https://apis.google.com/js/api.js"
       onload="this.onload=function(){};handleClientLoad()"
       onreadystatechange="if (this.readyState === 'complete') this.onload()">
     </script>  -->
-
- 
 </html>
