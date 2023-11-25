@@ -565,7 +565,7 @@ function createCharts(
         },
       },
       responsive: true,
-      aspectRatio: window.innerWidth <= 900 ? 1 : 1.9, // Adjust the aspect ratio for mobile/desktop
+      aspectRatio: window.innerWidth <= 900 ? 0.8 : 1.9, // Adjust the aspect ratio for mobile/desktop
       maintainAspectRatio: true,
       scales: {
         x: {
