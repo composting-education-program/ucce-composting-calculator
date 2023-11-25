@@ -167,6 +167,11 @@ function createStatsContainerElement(
   width = "4/5",
   desktopWidth = "3/12",
 ) {
+  // Rewrite statistic with a K if over 1000
+  if (statistic > 1000) {
+    statistic = (statistic / 1000).toFixed(2) + "K";
+  }
+
   var container = document.createElement("div");
   container.classList.add(
     "p-8",
@@ -184,7 +189,7 @@ function createStatsContainerElement(
   stat.classList.add(
     "font-heading",
     "mb-6",
-    parseInt(statistic) < 999 ? "text-3xl" : "text-xl",
+    "text-3xl",
     "md:text-6xl",
     "text-anr-blue",
     "font-black",
@@ -383,21 +388,28 @@ function loadSheets() {
         ];
 
         let averageTotalCompostPerUser = 0;
+        let totalUsers = 0;
         for (var i = 1; i < values.length; i++) {
           if (values[i][0].trim() == "" || values[i][1].trim() == "") continue;
           //console.log(values[i][0] + " " + values[i][1]);
+          totalUsers++;
           averageTotalCompostPerUser += parseFloat(values[i][0]);
           averageTotalCompostPerUser += parseFloat(values[i][1]);
         }
+        let totalCO2Saved = convertToKgCO2(
+          averageTotalCompostPerUser,
+          "gallons",
+        );
+        console.log(totalUsers);
         averageTotalCompostPerUser = (
-          averageTotalCompostPerUser /
-          (values.length - 1)
+          averageTotalCompostPerUser / totalUsers
         ).toFixed(2);
         createCharts(
           totalFoodCompost,
           totalYardCompost,
           foodWasteDataByMonth,
           yardWasteDataByMonth,
+          totalCO2Saved,
           averageTotalCompostPerUser,
         );
 
@@ -451,54 +463,18 @@ function percentile(arr, value) {
   return (totalCount * 100) / arr.length;
 }
 
-function percentile2(arr, v) {
-  arr = arr.filter((x) => x !== null && x !== "");
-  arr.sort();
-  if (typeof v !== "number") throw new TypeError("v must be a number");
-  for (var i = 0, l = arr.length; i < l; i++) {
-    if (v <= arr[i]) {
-      while (i < l && v === arr[i]) i++;
-      if (i === 0) return 0;
-      if (v !== arr[i - 1]) {
-        i += (v - arr[i - 1]) / (arr[i] - arr[i - 1]);
-      }
-      return i / l;
-    }
-  }
-  return 1;
-}
-
-function percentile3(data, value) {
-  data = data.filter((x) => x !== null && x !== "");
-  // Sort the data array in ascending order
-  const sortedData = data.slice().sort((a, b) => a - b);
-
-  // Find the index where the value would fit in the sorted array
-  let countBelow = 0;
-  for (let i = 0; i < sortedData.length; i++) {
-    if (sortedData[i] <= value) {
-      countBelow++;
-    } else {
-      break;
-    }
-  }
-
-  // Calculate percentile using the formula: (count of values below + 0.5 * count of equal values) / total count * 100
-  const percentile =
-    ((countBelow + 0.5 * sortedData.filter((x) => x === value).length) /
-      sortedData.length) *
-    100;
-
-  return percentile;
-}
-
 function createCharts(
   totalFoodCompost,
   totalYardCompost,
   foodWasteDataByMonth,
   yardWasteDataByMonth,
-  averageTotalCompostPerUser,
+  totalCO2Saved,
+  averageCompostPerUser,
 ) {
+  // Reformat data.
+  if (totalCO2Saved > 1000) {
+    totalCO2Saved = (totalCO2Saved / 1000).toFixed(2) + "K";
+  } else totalCO2Saved = totalCO2Saved.toFixed(2);
   document.getElementById("pie-chart").ariaLabel =
     "Pie chart showing the amount of food waste composted compared to yard waste composted in gallons, where the total food waste composted was " +
     totalFoodCompost +
@@ -599,14 +575,51 @@ function createCharts(
       },
     },
   });
-  const rightChartContainer = document.getElementById("right-flex-container");
-  rightChartContainer.appendChild(
-    createInfoContainerElement(
-      "Average compost per UCCE survey respondent: " +
-        averageTotalCompostPerUser +
-        " gallons",
-      "1",
-      "1",
-    ),
-  );
+  const rightChartContainer = document.getElementById("statistics-container");
+  let bigStatsContainer = document.createElement("div");
+
+  bigStatsContainer.innerHTML = `<div class="mt-10 pb-3">
+      <div class="relative">
+        <div class="absolute inset-0 h-1/2"></div>
+        <div class="md:max-w-[75%] tablet:max-w-xl relative mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="mx-auto md:max-w-[75%] tablet:max-w-xl">
+            <dl class="rounded-lg border-[1px] border-gray-100 bg-white shadow-lg sm:grid sm:grid-cols-2">
+              <div
+                class="flex flex-col border-b border-gray-200 p-6 text-center sm:border-0 sm:border-r"
+              >
+                <dt
+                  class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500"
+                  id="item-1"
+                >
+                  total kg CO2 saved
+                </dt>
+                <dd
+                  class="order-1 text-5xl font-extrabold leading-none text-anr-off-blue"
+                  aria-describedby="item-1"
+                >
+                  ${totalCO2Saved}
+                </dd>
+              </div>
+              <div
+                class="flex flex-col border-b border-t border-gray-200 p-6 text-center sm:border-0 sm:border-l sm:border-r"
+              >
+                <dt
+                  class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500"
+                >
+                average gallons compost per survey respondent 
+                </dt>
+                <dd
+                  class="order-1 text-5xl font-extrabold leading-none text-anr-off-blue"
+                >
+                ${averageCompostPerUser}
+                </dd>
+              </div>
+              
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
+  rightChartContainer.after(bigStatsContainer);
 }

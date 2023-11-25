@@ -21,19 +21,22 @@
 
   <body>
     <h1
-      class="mb-2 mt-4 text-center font-anr text-3xl font-bold text-anr-blue md:text-4xl"
+      class="text-anr-off-blue mb-2 mt-4 text-center font-anr text-3xl font-bold md:text-4xl"
     >
       Santa Clara Composting Statistics
     </h1>
 
     <div
-      class="mx-auto mt-4 w-4/5 md:flex md:w-3/5 md:justify-between"
+      class="tablet:flex tablet:justify-between mx-auto mt-4 w-4/5 md:w-3/5"
       id="statistics-container"
     >
-      <div id="left-flex-container" class="relative md:w-[40%]">
+      <div id="left-flex-container" class="tablet:w-[42%] relative md:w-[35%]">
         <canvas id="pie-chart" aria-label="Chart 1 information"></canvas>
       </div>
-      <div id="right-flex-container" class="relative mt-2 md:ml-4 md:w-[59%]">
+      <div
+        id="right-flex-container"
+        class="tablet:w-[49%] relative mt-2 md:ml-4 md:w-[65%]"
+      >
         <canvas aria-label="Chart 2 information" id="bar-chart"></canvas>
       </div>
     </div>
@@ -41,24 +44,24 @@
     <div class="mt-4 text-center">
       <div id="form" class="mx-2 mb-2 mt-4 text-center">
         <label
-          class="mb-2 block text-xl font-semibold md:text-2xl"
+          class="mb-2 text-center text-xl font-semibold md:text-2xl"
           for="input-text"
         >
           How much have you composted?
-          <p class="mt-2 text-lg font-normal">
+          <p class="mx-auto mt-2 w-[90%] text-lg font-normal">
             Use this composting calculator to see statistics about your
             composting efforts.
           </p>
         </label>
         <input
-          class="focus:shadow-outline px-1/20 my-2 w-[53%] appearance-none rounded border py-2 leading-tight text-gray-700 shadow focus:outline-none md:w-3/12"
+          class="focus:shadow-outline px-1/20 tablet:w-[40%] my-2 w-[80%] appearance-none rounded border py-2 leading-tight text-gray-700 shadow focus:outline-none md:w-3/12"
           id="input-text"
           name="amount"
           placeholder="Compost amount, e.g. 7.3"
         />
         <select
           id="measurement"
-          class="px-1/20 my-2 w-[18%] rounded border py-2 text-gray-700 shadow focus:border-blue-500 focus:ring-blue-500 md:w-1/12"
+          class="px-1/20 tablet:w-[18%] my-2 w-[35%] rounded border py-2 text-gray-700 shadow focus:border-blue-500 focus:ring-blue-500 md:w-1/12"
         >
           <option value="" disabled selected>Unit</option>
           <option value="kilograms">Kilograms (kg)</option>
@@ -68,7 +71,7 @@
         </select>
         <select
           id="compost-type"
-          class="px-1/20 my-2 w-[18%] rounded border py-2 text-gray-700 shadow focus:border-blue-500 focus:ring-blue-500 md:w-1/12"
+          class="px-1/20 tablet:w-[18%] my-2 w-[35%] rounded border py-2 text-gray-700 shadow focus:border-blue-500 focus:ring-blue-500 md:w-1/12"
         >
           <option value="" disabled selected>Type</option>
           <option value="food">Food Waste Only</option>
