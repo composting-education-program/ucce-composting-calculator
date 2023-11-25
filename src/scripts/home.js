@@ -1,8 +1,10 @@
+// Icon links
 var carIconSrc = "../images/car.png";
 var phoneIconSrc = "../images/charging.png";
 var gasIconSrc = "../images/gas-station.png";
 var treeIconSrc = "../images/plant.png";
 var carbonIconSrc = "../images/carbon-capture.png";
+var compostIconSrc = "../images/compostable.png";
 
 window.onload = function () {
   document
@@ -40,16 +42,12 @@ function handleFormSubmission() {
     }
     var input = document.getElementById("input-text");
     var unit = document.getElementById("measurement");
+    var type = document.getElementById("compost-type");
 
     // Store the input values in local storage
     localStorage.setItem("input", input.value);
     localStorage.setItem("unit", unit.value);
-
-    let description =
-      "Nice work! You were in the top " +
-      localStorage.getItem("input") +
-      "% of composters in Santa Clara.";
-    content.appendChild(createInfoContainerElement(description, "4/5", "1/2"));
+    localStorage.setItem("type", type.value);
 
     let kgCo2 = convertToKgCO2(input.value, unit.value).toFixed(2);
     let kgDesc = "kg of CO2 saved";
@@ -60,7 +58,7 @@ function handleFormSubmission() {
     let mdDesc = "miles driven";
 
     let smartPhonesCharged = convertToSmartPhonesCharged(tonsOfCo2).toFixed(2);
-    let spDesc = "smartphones charged";
+    let spDesc = "phones charged";
 
     let gallonsOfGas = convertToGasConsumed(tonsOfCo2).toFixed(2);
     let gogDesc = "gallons of gas consumed";
@@ -71,8 +69,34 @@ function handleFormSubmission() {
     let acresOfForest = convertToAcresOfForest(tonsOfCo2).toFixed(2);
     let aofDesc = "acres of forest in one year";
 
+    // Get the percentile of the user's composting
+    let lbsComposted = kgCo2 / 0.1814;
+    let galsComposted = lbsComposted / 6.18891540495;
+    let map = {
+      food: JSON.parse(localStorage.getItem("allFoodWasteComposted")),
+      yard: JSON.parse(localStorage.getItem("allYardWasteComposted")),
+      all: JSON.parse(localStorage.getItem("allWasteComposted")),
+    };
+    let description =
+      "According to our data, you were in the top " +
+      percentile(map[type.value], galsComposted).toFixed(2) +
+      "% of composters in Santa Clara.";
+    // console.log("Gals composted: " + galsComposted);
+    // console.log("Map type: " + map[type.value]);
+    // console.log(percentile(map[type.value], galsComposted) + "%");
+    // console.log(percentile2(map[type.value], galsComposted) + "%");
+    // console.log(percentile3(map[type.value], galsComposted) + "%");
+    content.appendChild(createInfoContainerElement(description, "4/5", "1/2"));
+
     content.appendChild(
-      createStatsContainerElement(kgCo2, kgDesc, carbonIconSrc, "4/5", "1/2"),
+      createStatsContainerElement(
+        kgCo2,
+        kgDesc,
+        carbonIconSrc,
+        "25px",
+        "4/5",
+        "1/2",
+      ),
     );
 
     content.appendChild(
@@ -83,6 +107,8 @@ function handleFormSubmission() {
         spDesc,
         carIconSrc,
         phoneIconSrc,
+        "30px",
+        "18px",
         "4/5",
         "1/2",
       ),
@@ -96,6 +122,8 @@ function handleFormSubmission() {
         tsgDesc,
         gasIconSrc,
         treeIconSrc,
+        "18px",
+        "17px",
         "4/5",
         "1/2",
       ),
@@ -134,6 +162,7 @@ function createStatsContainerElement(
   statistic,
   description,
   iconSrc,
+  iconSize = "30px",
   width = "4/5",
   desktopWidth = "3/12",
 ) {
@@ -154,11 +183,12 @@ function createStatsContainerElement(
   stat.classList.add(
     "font-heading",
     "mb-6",
-    "text-3xl",
+    parseInt(statistic) < 999 ? "text-3xl" : "text-xl",
     "md:text-6xl",
     "text-anr-blue",
     "font-black",
     "tracking-tight",
+    "max-w-full",
   );
   stat.innerHTML = statistic;
 
@@ -166,21 +196,22 @@ function createStatsContainerElement(
   desc.classList.add(
     "font-heading",
     "mb-2",
-    "text-l",
+    "text-base",
     "text-gray-700",
     "font-bold",
   );
-  desc.innerHTML = description;
 
   var icon = document.createElement("img");
-  icon.classList.add("inline", "ml-2");
+  icon.classList.add("inline");
   icon.src = iconSrc;
+  icon.style.height = iconSize;
   icon.alt = "icon";
-  icon.style.height = "30px"; // adjust the height as per your requirement
+
+  desc.appendChild(icon);
+  desc.innerHTML += " " + description;
 
   container.appendChild(stat);
   container.appendChild(desc);
-  container.appendChild(icon);
 
   return container;
 }
@@ -192,6 +223,8 @@ function createTwoStatsRowContainer(
   desc2,
   icon1,
   icon2,
+  icon1Sz = "30px",
+  icon2Sz = "30px",
   mobileWidth = "4/5",
   desktopWidth = "3/12",
 ) {
@@ -203,10 +236,10 @@ function createTwoStatsRowContainer(
     "mx-auto",
   );
 
-  var statCont1 = createStatsContainerElement(stat1, desc1, icon1);
+  var statCont1 = createStatsContainerElement(stat1, desc1, icon1, icon1Sz);
   statCont1.classList.remove("md:w-3/12");
   statCont1.classList.add("mr-1", "md:w-1/2");
-  var statCont2 = createStatsContainerElement(stat2, desc2, icon2);
+  var statCont2 = createStatsContainerElement(stat2, desc2, icon2, icon2Sz);
   statCont2.classList.remove("md:w-3/12");
   statCont2.classList.add("ml-1", "md:w-1/2");
 
@@ -319,8 +352,8 @@ function loadSheets() {
     .then(
       function (response) {
         const values = response.result.values;
-        totalFoodCompost = values[1][3];
-        totalYardCompost = values[1][4];
+        totalFoodCompost = values[1][2];
+        totalYardCompost = values[1][3];
         foodWasteMonth1 = values[3][5];
         foodWasteMonth2 = values[3][6];
         foodWasteMonth3 = values[3][7];
@@ -344,17 +377,47 @@ function loadSheets() {
 
         let averageTotalCompostPerUser = 0;
         for (var i = 1; i < values.length; i++) {
-          averageTotalCompostPerUser += parseInt(values[i][0]);
-          averageTotalCompostPerUser += parseInt(values[i][1]);
+          if (values[i][0].trim() == "" || values[i][1].trim() == "") continue;
+          //console.log(values[i][0] + " " + values[i][1]);
+          averageTotalCompostPerUser += parseFloat(values[i][0]);
+          averageTotalCompostPerUser += parseFloat(values[i][1]);
         }
-        averageTotalCompostPerUser =
-          averageTotalCompostPerUser / (values.length - 1);
+        averageTotalCompostPerUser = (
+          averageTotalCompostPerUser /
+          (values.length - 1)
+        ).toFixed(2);
         createCharts(
           totalFoodCompost,
           totalYardCompost,
           foodWasteDataByMonth,
           yardWasteDataByMonth,
           averageTotalCompostPerUser,
+        );
+
+        allFoodWasteComposted = values
+          .slice(1)
+          .map((row) => parseFloat(row[0]));
+
+        allYardWasteComposted = values
+          .slice(1)
+          .map((row) => parseFloat(row[1]));
+
+        // For the total, total[i] = allFoodWasteComposted[i] + allYardWasteComposted[i]
+        allWasteComposted = allFoodWasteComposted.map(
+          (value, index) => value + allYardWasteComposted[index],
+        );
+
+        localStorage.setItem(
+          "allWasteComposted",
+          JSON.stringify(allWasteComposted),
+        );
+        localStorage.setItem(
+          "allFoodWasteComposted",
+          JSON.stringify(allFoodWasteComposted),
+        );
+        localStorage.setItem(
+          "allYardWasteComposted",
+          JSON.stringify(allYardWasteComposted),
         );
       },
       function (response) {
@@ -366,6 +429,62 @@ function loadSheets() {
     );
 }
 
+function percentile(arr, value) {
+  //remove empty values from array
+  arr = arr.filter((x) => x !== null && x !== "");
+  const currentIndex = 0;
+  const totalCount = arr.reduce((count, currentValue) => {
+    if (currentValue < value) {
+      return count + 1; // add 1 to `count`
+    } else if (currentValue === value) {
+      return count + 0.5; // add 0.5 to `count`
+    }
+    return count + 0;
+  }, currentIndex);
+  return (totalCount * 100) / arr.length;
+}
+
+function percentile2(arr, v) {
+  arr = arr.filter((x) => x !== null && x !== "");
+  arr.sort();
+  if (typeof v !== "number") throw new TypeError("v must be a number");
+  for (var i = 0, l = arr.length; i < l; i++) {
+    if (v <= arr[i]) {
+      while (i < l && v === arr[i]) i++;
+      if (i === 0) return 0;
+      if (v !== arr[i - 1]) {
+        i += (v - arr[i - 1]) / (arr[i] - arr[i - 1]);
+      }
+      return i / l;
+    }
+  }
+  return 1;
+}
+
+function percentile3(data, value) {
+  data = data.filter((x) => x !== null && x !== "");
+  // Sort the data array in ascending order
+  const sortedData = data.slice().sort((a, b) => a - b);
+
+  // Find the index where the value would fit in the sorted array
+  let countBelow = 0;
+  for (let i = 0; i < sortedData.length; i++) {
+    if (sortedData[i] <= value) {
+      countBelow++;
+    } else {
+      break;
+    }
+  }
+
+  // Calculate percentile using the formula: (count of values below + 0.5 * count of equal values) / total count * 100
+  const percentile =
+    ((countBelow + 0.5 * sortedData.filter((x) => x === value).length) /
+      sortedData.length) *
+    100;
+
+  return percentile;
+}
+
 function createCharts(
   totalFoodCompost,
   totalYardCompost,
@@ -373,6 +492,32 @@ function createCharts(
   yardWasteDataByMonth,
   averageTotalCompostPerUser,
 ) {
+  document.getElementById("pie-chart").ariaLabel =
+    "Pie chart showing the amount of food waste composted compared to yard waste composted in gallons, where the total food waste composted was " +
+    totalFoodCompost +
+    " gallons and the total yard waste composted was " +
+    totalYardCompost +
+    " gallons.";
+
+  document.getElementById("bar-chart").ariaLabel =
+    "Stacked bar chart showing food waste composted versus yard waste composted by month, where the total food waste for Month 1 was " +
+    foodWasteDataByMonth[0] +
+    " gallons, while for month 2 it was " +
+    foodWasteDataByMonth[1] +
+    " gallons, for month 3 it was " +
+    foodWasteDataByMonth[2] +
+    " gallons, and for month 4 it was " +
+    foodWasteDataByMonth[3] +
+    " gallons. The total yard waste for Month 1 was " +
+    yardWasteDataByMonth[0] +
+    " gallons, while for month 2 it was " +
+    yardWasteDataByMonth[1] +
+    " gallons, for month 3 it was " +
+    yardWasteDataByMonth[2] +
+    " gallons, and for month 4 it was " +
+    yardWasteDataByMonth[3] +
+    " gallons.";
+
   const pieChartElement = document.getElementById("pie-chart").getContext("2d");
   new Chart(pieChartElement, {
     type: "pie",
@@ -398,6 +543,12 @@ function createCharts(
       maintainAspectRatio: true,
     },
   });
+
+  // Max should be the max value of the two arrays summed together,
+  // rounded to the nearest 50.
+  let max =
+    Math.max(...foodWasteDataByMonth) + Math.max(...yardWasteDataByMonth);
+  let maxYAxis = Math.ceil(max / 50) * 50;
 
   const stackedBarChartElement = document
     .getElementById("bar-chart")
@@ -427,7 +578,7 @@ function createCharts(
         },
       },
       responsive: true,
-      aspectRatio: 1.9,
+      aspectRatio: window.innerWidth <= 900 ? 1 : 1.9, // Adjust the aspect ratio for mobile/desktop
       maintainAspectRatio: true,
       scales: {
         x: {
@@ -436,7 +587,7 @@ function createCharts(
         y: {
           stacked: true,
           beginAtZero: true,
-          max: 200,
+          max: maxYAxis,
         },
       },
     },
