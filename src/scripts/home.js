@@ -175,7 +175,6 @@ function createStatsContainerElement(
   var container = document.createElement("div");
   container.classList.add(
     "p-8",
-    "bg-gray-100",
     "border",
     "border-gray-300",
     "rounded-3xl",
@@ -183,6 +182,7 @@ function createStatsContainerElement(
     `md:w-${desktopWidth}`,
     "mx-auto",
     "mt-2",
+    "shadow-md",
   );
 
   var stat = document.createElement("p");
@@ -190,8 +190,8 @@ function createStatsContainerElement(
     "font-heading",
     "mb-6",
     "text-3xl",
-    "md:text-6xl",
-    "text-anr-blue",
+    "md:text-5xl",
+    "text-anr-off-blue",
     "font-black",
     "tracking-tight",
     "max-w-full",
@@ -510,7 +510,9 @@ function createCharts(
         {
           labels: [],
           data: [totalFoodCompost, totalYardCompost],
-          borderWidth: 1,
+          borderWidth: 2,
+          borderColor: "#b8b8b8",
+          backgroundColor: ["#fdbd10", "#3aa8e4"],
         },
       ],
     },
@@ -518,7 +520,7 @@ function createCharts(
       plugins: {
         title: {
           display: true,
-          text: "Food Waste vs Yard Waste",
+          text: "Total Food Waste vs Total Yard Waste",
         },
       },
       responsive: true,
@@ -545,11 +547,13 @@ function createCharts(
           label: "Food Waste (gallons)",
           data: foodWasteDataByMonth,
           borderWidth: 1,
+          backgroundColor: "#fdbd10",
         },
         {
           label: "Yard Waste (gallons)",
           data: yardWasteDataByMonth,
           borderWidth: 1,
+          backgroundColor: "#3aa8e4",
         },
       ],
     },
@@ -588,7 +592,7 @@ function createCharts(
                 class="flex flex-col border-b border-gray-200 p-6 text-center sm:border-0 sm:border-r"
               >
                 <dt
-                  class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500"
+                  class="order-2 mt-2 text-lg font-medium leading-6 text-gray-700"
                   id="item-1"
                 >
                   total kg CO2 saved
@@ -604,7 +608,7 @@ function createCharts(
                 class="flex flex-col border-b border-t border-gray-200 p-6 text-center sm:border-0 sm:border-l sm:border-r"
               >
                 <dt
-                  class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500"
+                  class="order-2 mt-2 text-lg font-medium leading-6 text-gray-700"
                 >
                 average gallons compost per survey respondent 
                 </dt>

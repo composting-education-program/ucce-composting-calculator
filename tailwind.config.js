@@ -12,6 +12,8 @@ module.exports = {
         "anr-light-blue": "#3aa8e4",
         "anr-gold": "#fdbd10",
         "anr-off-blue": "#003c61",
+        "anr-red" : "#ab312c",
+        "anr-green" : "#67893e"
       },
       screens: {
         tablet: "520px",
