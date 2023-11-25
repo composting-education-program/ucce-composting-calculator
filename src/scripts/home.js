@@ -33,7 +33,8 @@ function handleFormSubmission() {
 
   if (
     document.getElementById("input-text").value.trim() == "" ||
-    document.getElementById("measurement").value == ""
+    document.getElementById("measurement").value == "" ||
+    document.getElementById("compost-type").value == ""
   ) {
     formValidation();
   } else {
@@ -295,16 +296,22 @@ function formValidation() {
       : document.createElement("div");
   alert.id = "form-validation-alert";
   var error = "";
-  if (
-    document.getElementById("input-text").value.trim() == "" &&
-    document.getElementById("measurement").value == ""
-  ) {
-    error = "Please enter a valid quantity and unit for composting";
-  } else if (document.getElementById("input-text").value.trim() == "") {
-    error = "Please enter a valid quantity for composting.";
-  } else {
-    error = "Please enter a valid unit for composting.";
+  // handle different combinations of empty fields
+  let prevError = false;
+  let errMsgDetails = "";
+  if (document.getElementById("input-text").value.trim() == "") {
+    prevError = true;
+    errMsgDetails += "quantity";
   }
+  if (document.getElementById("measurement").value == "") {
+    errMsgDetails += prevError ? "/unit" : "unit";
+    prevError = true;
+  }
+  if (document.getElementById("compost-type").value == "") {
+    errMsgDetails += prevError ? "/type" : "type";
+    prevError = true;
+  }
+  error = "Please enter a valid " + errMsgDetails + " for composting.";
   alert.innerHTML =
     `<div class="w-4/5 md:w-[40%] mx-auto bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
     <strong class="font-bold">Uh-oh! That's not how much you composted!</strong>
