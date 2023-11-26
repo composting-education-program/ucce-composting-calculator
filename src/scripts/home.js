@@ -130,6 +130,8 @@ function handleFormSubmission() {
       ),
     );
   }
+
+  document.getElementById("user-input-content").scrollIntoView({behavior: "smooth"});
 }
 
 function createInfoContainerElement(
