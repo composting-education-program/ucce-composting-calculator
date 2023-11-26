@@ -187,6 +187,8 @@ function toggleAR() {
     document.getElementById("popup-modal").classList.toggle("opacity-0");
     document.getElementById("popup-modal").classList.toggle("opacity-100");
   }
+
+  document.getElementById("user-input-content").scrollIntoView({behavior: "smooth"});
 }
 
 function createInfoContainerElement(
