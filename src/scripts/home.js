@@ -135,7 +135,7 @@ function handleFormSubmission() {
     toggleARModal.classList.add("mt-4");
     toggleARModal.innerHTML = `
       <button onclick="toggleAR()" class="mx-auto block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-      Share this result with friends <img class="inline" width="20px" src="${shareIconSrc}"/>
+      Share your composting efforts<img class="inline ml-3 mb-1 invert" width="20px" src="${shareIconSrc}"/>
       </button>
   
       <div id="overlay-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 ease-in-out opacity-0 invisible transition-all"></div>
@@ -150,7 +150,7 @@ function handleFormSubmission() {
                   </button>
                   <div class="p-4 md:p-5 text-center">
                       <img src=${qrCodeSrc} class="w-3/4 mt-4 mx-auto"/>
-                      <h3 class="mb-3 mt-6 text-lg font-normal text-gray-500 dark:text-gray-400">To share, please scan the QR code on a mobile device.</h3>
+                      <h3 class="mb-3 mt-6 text-lg font-normal text-gray-500 dark:text-gray-400">Please scan the QR code with a mobile device to view the UCCE Composting Education Program's AR experience and share your composting efforts on social media.</h3>
                   </div>
               </div>
           </div>
