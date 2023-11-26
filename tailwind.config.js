@@ -12,18 +12,11 @@ module.exports = {
         "anr-light-blue": "#3aa8e4",
         "anr-gold": "#fdbd10",
         "anr-off-blue": "#003c61",
-        "anr-red" : "#ab312c",
-        "anr-green" : "#67893e"
+        "anr-red": "#ab312c",
+        "anr-green": "#67893e",
       },
       screens: {
         tablet: "520px",
-        // => @media (min-width: 576px) { ... }
-
-        laptop: "992px",
-        // => @media (min-width: 992px) { ... }
-
-        desktop: "1200px",
-        // => @media (min-width: 1200px) { ... }
       },
     },
   },

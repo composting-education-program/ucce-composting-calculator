@@ -5,6 +5,8 @@ var gasIconSrc = "../images/gas-station.png";
 var treeIconSrc = "../images/plant.png";
 var carbonIconSrc = "../images/carbon-capture.png";
 var compostIconSrc = "../images/compostable.png";
+var shareIconSrc = "../images/share.png";
+var qrCodeSrc = "../images/qrcode.png";
 
 window.onload = function () {
   document
@@ -129,6 +131,61 @@ function handleFormSubmission() {
         "1/2",
       ),
     );
+    toggleARModal = document.createElement("div");
+    toggleARModal.classList.add("mt-4");
+    toggleARModal.innerHTML = `
+      <button onclick="toggleAR()" class="mx-auto block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+      Share this result with friends <img class="inline" width="20px" src="${shareIconSrc}"/>
+      </button>
+  
+      <div id="overlay-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 ease-in-out opacity-0 invisible transition-all"></div>
+      <div id="popup-modal" tabindex="-1" class="hidden opacity-0 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all ease-in-out overflow-y-auto overflow-x-hidden z-50 w-full max-w-md">
+          <div class="m-auto relative p-4 w-full max-w-md max-h-full">
+              <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                  <button type="button" onclick="toggleAR()" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" id="close-modal">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                      </svg>
+                      <span class="sr-only">Close modal</span>
+                  </button>
+                  <div class="p-4 md:p-5 text-center">
+                      <img src=${qrCodeSrc} class="w-3/4 mt-4 mx-auto"/>
+                      <h3 class="mb-3 mt-6 text-lg font-normal text-gray-500 dark:text-gray-400">To share, please scan the QR code on a mobile device.</h3>
+                  </div>
+              </div>
+          </div>
+      </div>
+    `;
+    content.appendChild(toggleARModal);
+  }
+}
+
+function toggleAR() {
+  // If device is mobile, open AR website in new tab (https://ytxxc.zappar.io/7543435830527519324/)
+  // Else, open AR QR code website in popup modal
+  let check = false;
+  (function (a) {
+    if (
+      /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
+        a,
+      ) ||
+      /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(
+        a.substr(0, 4),
+      )
+    )
+      check = true;
+  })(navigator.userAgent || navigator.vendor || window.opera);
+
+  if (check) {
+    window.open("https://ytxxc.zappar.io/7543435830527519324/", "_blank");
+  } else {
+    console.log("not mobile");
+    document.getElementById("overlay-modal").classList.toggle("invisible");
+    document.getElementById("overlay-modal").classList.toggle("opacity-0");
+    document.getElementById("overlay-modal").classList.toggle("opacity-100");
+    document.getElementById("popup-modal").classList.toggle("hidden");
+    document.getElementById("popup-modal").classList.toggle("opacity-0");
+    document.getElementById("popup-modal").classList.toggle("opacity-100");
   }
 }
 
@@ -565,7 +622,8 @@ function createCharts(
         },
       },
       responsive: true,
-      aspectRatio: window.innerWidth <= 900 ? 0.8 : 1.9, // Adjust the aspect ratio for mobile/desktop
+      aspectRatio:
+        window.innerWidth <= 900 ? (window.width < 530 ? 0.8 : 1) : 1.9, // Adjust the aspect ratio for mobile/tablet/desktop
       maintainAspectRatio: true,
       scales: {
         x: {
@@ -579,7 +637,7 @@ function createCharts(
       },
     },
   });
-  const rightChartContainer = document.getElementById("statistics-container");
+  const stats = document.getElementById("statistics-container");
   let bigStatsContainer = document.createElement("div");
 
   bigStatsContainer.innerHTML = `<div class="mt-10 pb-3">
@@ -625,5 +683,5 @@ function createCharts(
       </div>
     </div>
     `;
-  rightChartContainer.after(bigStatsContainer);
+  stats.after(bigStatsContainer);
 }
