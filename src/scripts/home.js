@@ -139,7 +139,7 @@ function handleFormSubmission() {
       </button>
   
       <div id="overlay-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 ease-in-out opacity-0 invisible transition-all"></div>
-      <div id="popup-modal" tabindex="-1" class="hidden opacity-0 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all ease-in-out overflow-y-auto overflow-x-hidden z-50 w-full max-w-md">
+      <div id="popup-modal" tabindex="-1" class="invisible opacity-0 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all ease-in-out overflow-y-auto overflow-x-hidden z-50 w-full max-w-md">
           <div class="m-auto relative p-4 w-full max-w-md max-h-full">
               <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                   <button type="button" onclick="toggleAR()" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" id="close-modal">
@@ -183,12 +183,14 @@ function toggleAR() {
     document.getElementById("overlay-modal").classList.toggle("invisible");
     document.getElementById("overlay-modal").classList.toggle("opacity-0");
     document.getElementById("overlay-modal").classList.toggle("opacity-100");
-    document.getElementById("popup-modal").classList.toggle("hidden");
+    document.getElementById("popup-modal").classList.toggle("invisible");
     document.getElementById("popup-modal").classList.toggle("opacity-0");
     document.getElementById("popup-modal").classList.toggle("opacity-100");
   }
 
-  document.getElementById("user-input-content").scrollIntoView({behavior: "smooth"});
+  document
+    .getElementById("user-input-content")
+    .scrollIntoView({ behavior: "smooth" });
 }
 
 function createInfoContainerElement(
