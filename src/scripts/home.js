@@ -101,36 +101,110 @@ function handleFormSubmission() {
         "1/2",
       ),
     );
+    // desktop computer
+    if(window.screen.width >= 768){
+      content.appendChild(
+        createTwoStatsRowContainer(
+          milesDriven,
+          smartPhonesCharged,
+          mdDesc,
+          spDesc,
+          carIconSrc,
+          phoneIconSrc,
+          "30px",
+          "18px",
+          "4/5",
+          "1/2",
+        ),
+      );
+  
+      content.appendChild(
+        createTwoStatsRowContainer(
+          gallonsOfGas,
+          treeSeedlingsGrown,
+          gogDesc,
+          tsgDesc,
+          gasIconSrc,
+          treeIconSrc,
+          "18px",
+          "17px",
+          "4/5",
+          "1/2",
+        ),
+      );
+    } // mobile
+    else {
+      content.appendChild(
+        createStatsContainerElement(
+          milesDriven,
+          mdDesc,
+          carIconSrc,
+          "25px",
+          "4/5",
+          "1/2",
+        ),
+      );
+      content.appendChild(
+        createStatsContainerElement(
+          smartPhonesCharged,
+          spDesc,
+          phoneIconSrc,
+          "25px",
+          "4/5",
+          "1/2",
+        ),
+      );
+      content.appendChild(
+        createStatsContainerElement(
+          gallonsOfGas,
+          gogDesc,
+          gasIconSrc,
+          "25px",
+          "4/5",
+          "1/2",
+        ),
+      );
+      content.appendChild(
+        createStatsContainerElement(
+          treeSeedlingsGrown,
+          tsgDesc,
+          treeIconSrc,
+          "25px",
+          "4/5",
+          "1/2",
+        ),
+      );
 
-    content.appendChild(
-      createTwoStatsRowContainer(
-        milesDriven,
-        smartPhonesCharged,
-        mdDesc,
-        spDesc,
-        carIconSrc,
-        phoneIconSrc,
-        "30px",
-        "18px",
-        "4/5",
-        "1/2",
-      ),
-    );
+    }
+    // content.appendChild(
+    //   createTwoStatsRowContainer(
+    //     milesDriven,
+    //     smartPhonesCharged,
+    //     mdDesc,
+    //     spDesc,
+    //     carIconSrc,
+    //     phoneIconSrc,
+    //     "30px",
+    //     "18px",
+    //     "4/5",
+    //     "1/2",
+    //   ),
+    // );
 
-    content.appendChild(
-      createTwoStatsRowContainer(
-        gallonsOfGas,
-        treeSeedlingsGrown,
-        gogDesc,
-        tsgDesc,
-        gasIconSrc,
-        treeIconSrc,
-        "18px",
-        "17px",
-        "4/5",
-        "1/2",
-      ),
-    );
+    // content.appendChild(
+    //   createTwoStatsRowContainer(
+    //     gallonsOfGas,
+    //     treeSeedlingsGrown,
+    //     gogDesc,
+    //     tsgDesc,
+    //     gasIconSrc,
+    //     treeIconSrc,
+    //     "18px",
+    //     "17px",
+    //     "4/5",
+    //     "1/2",
+    //   ),
+    // );
     toggleARModal = document.createElement("div");
     toggleARModal.classList.add("mt-4");
     toggleARModal.innerHTML = `
