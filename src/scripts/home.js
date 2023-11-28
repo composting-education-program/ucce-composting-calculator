@@ -131,32 +131,6 @@ function handleFormSubmission() {
         "1/2",
       ),
     );
-    toggleARModal = document.createElement("div");
-    toggleARModal.classList.add("mt-4");
-    toggleARModal.innerHTML = `
-      <button onclick="toggleAR()" class="mx-auto block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-      Share your composting efforts<img class="inline ml-3 mb-1 invert" width="20px" src="${shareIconSrc}"/>
-      </button>
-  
-      <div id="overlay-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 ease-in-out opacity-0 invisible transition-all"></div>
-      <div id="popup-modal" tabindex="-1" class="invisible opacity-0 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all ease-in-out overflow-y-auto overflow-x-hidden z-50 w-full max-w-md">
-          <div class="m-auto relative p-4 w-full max-w-md max-h-full">
-              <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                  <button type="button" onclick="toggleAR()" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" id="close-modal">
-                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                      </svg>
-                      <span class="sr-only">Close modal</span>
-                  </button>
-                  <div class="p-4 md:p-5 text-center">
-                      <img src=${qrCodeSrc} class="w-3/4 mt-4 mx-auto"/>
-                      <h3 class="mb-3 mt-6 text-lg font-normal text-gray-500 dark:text-gray-400">Please scan the QR code with a mobile device to view the UCCE Composting Education Program's AR experience and share your composting efforts on social media.</h3>
-                  </div>
-              </div>
-          </div>
-      </div>
-    `;
-    content.appendChild(toggleARModal);
   }
 }
 
@@ -179,18 +153,13 @@ function toggleAR() {
   if (check) {
     window.open("https://ytxxc.zappar.io/7543435830527519324/", "_blank");
   } else {
-    console.log("not mobile");
     document.getElementById("overlay-modal").classList.toggle("invisible");
+    document.getElementById("popup-modal").classList.toggle("invisible");
     document.getElementById("overlay-modal").classList.toggle("opacity-0");
     document.getElementById("overlay-modal").classList.toggle("opacity-100");
-    document.getElementById("popup-modal").classList.toggle("invisible");
     document.getElementById("popup-modal").classList.toggle("opacity-0");
     document.getElementById("popup-modal").classList.toggle("opacity-100");
   }
-
-  document
-    .getElementById("user-input-content")
-    .scrollIntoView({ behavior: "smooth" });
 }
 
 function createInfoContainerElement(
@@ -461,7 +430,7 @@ function loadSheets() {
           averageTotalCompostPerUser,
           "gallons",
         );
-        console.log(totalUsers);
+        //console.log(totalUsers);
         averageTotalCompostPerUser = (
           averageTotalCompostPerUser / totalUsers
         ).toFixed(2);
