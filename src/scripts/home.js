@@ -233,8 +233,9 @@ function formValidation() {
 function createCharts(
   totalFoodCompost,
   totalYardCompost,
-  foodWasteDataByMonth,
-  yardWasteDataByMonth,
+  histogramLabels,
+  histogramData,
+  histogramStep,
   totalCO2Saved,
   averageCompostPerUser,
 ) {
@@ -250,23 +251,18 @@ function createCharts(
     " gallons.";
 
   document.getElementById("bar-chart").ariaLabel =
-    "Stacked bar chart showing food waste composted versus yard waste composted by month, where the total food waste for Month 1 was " +
-    foodWasteDataByMonth[0] +
-    " gallons, while for month 2 it was " +
-    foodWasteDataByMonth[1] +
-    " gallons, for month 3 it was " +
-    foodWasteDataByMonth[2] +
-    " gallons, and for month 4 it was " +
-    foodWasteDataByMonth[3] +
-    " gallons. The total yard waste for Month 1 was " +
-    yardWasteDataByMonth[0] +
-    " gallons, while for month 2 it was " +
-    yardWasteDataByMonth[1] +
-    " gallons, for month 3 it was " +
-    yardWasteDataByMonth[2] +
-    " gallons, and for month 4 it was " +
-    yardWasteDataByMonth[3] +
-    " gallons.";
+    "Histogram showing ranges of total food waste composted versus percentage of users who composted within that range, where the first range was between ";
+  for (let i = 0; i < histogramLabels.length; i++) {
+    document.getElementById("bar-chart").ariaLabel +=
+      histogramLabels[i] -
+      histogramStep / 2 +
+      " and " +
+      (histogramLabels[i] + histogramStep / 2) +
+      " gallons, and the percentage of users who composted within that range was " +
+      histogramData[i] +
+      " percent, " +
+      " the next range was between ";
+  }
 
   const pieChartElement = document.getElementById("pie-chart").getContext("2d");
   new Chart(pieChartElement, {
@@ -296,53 +292,84 @@ function createCharts(
     },
   });
 
-  // Max should be the max value of the two arrays summed together,
-  // rounded to the nearest 50.
-  let max =
-    Math.max(...foodWasteDataByMonth) + Math.max(...yardWasteDataByMonth);
-  let maxYAxis = Math.ceil(max / 50) * 50;
+  let mappedHistogramData = histogramData.map((k, i) => ({
+    x: histogramLabels[i],
+    y: k,
+  }));
 
-  const stackedBarChartElement = document
-    .getElementById("bar-chart")
-    .getContext("2d");
-  new Chart(stackedBarChartElement, {
+  const histogram = document.getElementById("bar-chart").getContext("2d");
+  new Chart(histogram, {
     type: "bar",
     data: {
-      labels: ["June 2023", "July 2023", "August 2023", "September 2023"],
       datasets: [
         {
-          label: "Food Waste (gallons)",
-          data: foodWasteDataByMonth,
-          borderWidth: 1,
-          backgroundColor: "#fdbd10",
-        },
-        {
-          label: "Yard Waste (gallons)",
-          data: yardWasteDataByMonth,
-          borderWidth: 1,
+          label: "Percentage of Users",
+          data: mappedHistogramData,
           backgroundColor: "#3aa8e4",
+          borderColor: "#0371ad",
+          borderWidth: 1,
+          barPercentage: 1,
+          categoryPercentage: 1,
+          borderRadius: 5,
         },
       ],
     },
     options: {
-      plugins: {
-        title: {
-          display: true,
-          text: "Food Waste vs Yard Waste by Month",
+      scales: {
+        x: {
+          type: "linear",
+          offset: false,
+          grid: {
+            offset: false,
+          },
+          ticks: {
+            stepSize: histogramStep,
+          },
+          title: {
+            display: true,
+            text: "Weekly Compost (gallons)",
+            font: {
+              size: 14,
+            },
+          },
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: "Percentage of Users",
+            font: {
+              size: 14,
+            },
+          },
         },
       },
       responsive: true,
       aspectRatio:
         window.innerWidth <= 900 ? (window.innerWidth < 530 ? 0.8 : 1) : 1.9, // Adjust the aspect ratio for mobile/tablet/desktop
       maintainAspectRatio: true,
-      scales: {
-        x: {
-          stacked: true,
+      plugins: {
+        legend: {
+          display: false,
         },
-        y: {
-          stacked: true,
-          beginAtZero: true,
-          max: maxYAxis,
+        title: {
+          display: true,
+          text: "Weekly Compost Per User Distribution",
+        },
+
+        tooltip: {
+          callbacks: {
+            title: (items) => {
+              if (!items.length) {
+                return "";
+              }
+              const item = items[0];
+              const x = item.parsed.x;
+              const min = x - histogramStep / 2;
+              const max = x + histogramStep / 2;
+              return `Weekly Compost: ${min} - ${max} gallons`;
+            },
+          },
         },
       },
     },
@@ -600,8 +627,8 @@ function initClient() {
 }
 
 function loadSheets() {
-  const spreadsheetId = "1a2lu7WKtuDUc8pVww3tYwzoSUcgwdtpoWC1CxdEGaoI";
-  const sheetName = "Sheet1";
+  const spreadsheetId = "1QKrr4FgZQi-TJFIzq1uSpM4lPKgcVWxCohREJAllrD8";
+  const sheetName = "QuialtrixRawData";
 
   gapi.client.sheets.spreadsheets.values
     .get({
@@ -611,61 +638,17 @@ function loadSheets() {
     .then(
       function (response) {
         const values = response.result.values;
-        totalFoodCompost = values[1][2];
-        totalYardCompost = values[1][3];
-        foodWasteMonth1 = values[3][5];
-        foodWasteMonth2 = values[3][6];
-        foodWasteMonth3 = values[3][7];
-        foodWasteMonth4 = values[3][8];
-        foodWasteDataByMonth = [
-          foodWasteMonth1,
-          foodWasteMonth2,
-          foodWasteMonth3,
-          foodWasteMonth4,
-        ];
-        yardWasteMonth1 = values[4][5];
-        yardWasteMonth2 = values[4][6];
-        yardWasteMonth3 = values[4][7];
-        yardWasteMonth4 = values[4][8];
-        yardWasteDataByMonth = [
-          yardWasteMonth1,
-          yardWasteMonth2,
-          yardWasteMonth3,
-          yardWasteMonth4,
-        ];
-
-        let averageTotalCompostPerUser = 0;
-        let totalUsers = 0;
-        for (var i = 1; i < values.length; i++) {
-          if (values[i][0].trim() == "" || values[i][1].trim() == "") continue;
-          totalUsers++;
-          averageTotalCompostPerUser += parseFloat(values[i][0]);
-          averageTotalCompostPerUser += parseFloat(values[i][1]);
-        }
-        let totalCO2Saved = convertToKgCO2(
-          averageTotalCompostPerUser,
-          "gallons",
-        );
-        averageTotalCompostPerUser = (
-          averageTotalCompostPerUser / totalUsers
-        ).toFixed(2);
-        createCharts(
-          totalFoodCompost,
-          totalYardCompost,
-          foodWasteDataByMonth,
-          yardWasteDataByMonth,
-          totalCO2Saved,
-          averageTotalCompostPerUser,
-        );
+        totalFoodCompost = values[1][3];
+        totalYardCompost = values[1][4];
 
         // Used for calculating percentiles.
         allFoodWasteComposted = values
           .slice(1)
-          .map((row) => parseFloat(row[0]));
+          .map((row) => parseFloat(row[1]));
 
         allYardWasteComposted = values
           .slice(1)
-          .map((row) => parseFloat(row[1]));
+          .map((row) => parseFloat(row[2]));
 
         // For the total, total[i] = allFoodWasteComposted[i] + allYardWasteComposted[i]
         allWasteComposted = allFoodWasteComposted.map(
@@ -683,6 +666,75 @@ function loadSheets() {
         localStorage.setItem(
           "allYardWasteComposted",
           JSON.stringify(allYardWasteComposted),
+        );
+
+        let maxTotalCompost = 0;
+        let averageTotalCompostPerUser = 0;
+        let totalUsers = 0;
+        for (var i = 1; i < values.length; i++) {
+          if (
+            !values[i][1] ||
+            !values[i][2] ||
+            values[i][1].trim() == "" ||
+            values[i][2].trim() == ""
+          )
+            continue;
+          totalUsers++;
+          averageTotalCompostPerUser += parseFloat(values[i][1]);
+          averageTotalCompostPerUser += parseFloat(values[i][2]);
+          if (
+            maxTotalCompost <
+            parseFloat(values[i][1]) + parseFloat(values[i][2])
+          ) {
+            maxTotalCompost =
+              parseFloat(values[i][1]) + parseFloat(values[i][2]);
+          }
+        }
+        // Round maxTotalCompost to nearest integer divisible by 8.
+        maxTotalCompost = Math.ceil(maxTotalCompost / 8) * 8;
+        // Create labels for a histogram, starting at 0, ending at maxTotalCompost, with 8 bins.
+        let histogramLabels = [];
+        for (
+          var i = maxTotalCompost / 8;
+          i <= maxTotalCompost;
+          i += maxTotalCompost / 8
+        ) {
+          histogramLabels.push(i - maxTotalCompost / 16);
+        }
+
+        let histogramStep = maxTotalCompost / 8;
+        // Create data for the histogram: the percentage of users who composted between each bin.
+        let histogramData = [];
+        for (var i = 0; i < histogramLabels.length; i++) {
+          histogramData.push(
+            (
+              percentile(
+                allWasteComposted,
+                histogramLabels[i] + histogramStep / 2,
+              ) -
+              percentile(
+                allWasteComposted,
+                histogramLabels[i] - histogramStep / 2,
+              )
+            ).toFixed(2),
+          );
+        }
+
+        let totalCO2Saved = convertToKgCO2(
+          averageTotalCompostPerUser,
+          "gallons",
+        );
+        averageTotalCompostPerUser = (
+          averageTotalCompostPerUser / totalUsers
+        ).toFixed(2);
+        createCharts(
+          totalFoodCompost,
+          totalYardCompost,
+          histogramLabels,
+          histogramData,
+          histogramStep,
+          totalCO2Saved,
+          averageTotalCompostPerUser,
         );
       },
       function (response) {
