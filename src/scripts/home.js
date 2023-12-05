@@ -615,7 +615,7 @@ function initClient() {
   try {
     gapi.client
       .init({
-        apiKey: process.env.API_KEY,
+        apiKey: AIzaSyAalwjvT0D5TWInJchaijnw6L7iap6nCJ0,
         discoveryDocs: DISCOVERY_DOCS,
       })
       .then(function () {
