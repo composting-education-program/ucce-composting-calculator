@@ -49,7 +49,7 @@ function handleFormSubmission() {
     var type = document.getElementById("compost-type");
 
     let kgCo2 = convertToKgCO2(input.value, unit.value).toFixed(2);
-    let kgDesc = "kg of CO2 saved";
+    let kgDesc = "kg of CO² saved";
 
     let tonsOfCo2 = kgCo2 / 1000;
 
@@ -391,7 +391,7 @@ function createCharts(
                   class="order-2 mt-2 text-lg font-medium leading-6 text-gray-700"
                   id="item-1"
                 >
-                  total kg CO2 saved
+                  total kg CO² saved
                 </dt>
                 <dd
                   class="order-1 text-5xl font-extrabold leading-none text-anr-off-blue"
