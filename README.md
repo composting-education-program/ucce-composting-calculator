@@ -12,7 +12,7 @@ This calculator is a web application designed to help individuals track and calc
 
 ## How to Use
 
-1. Visit the website in the GitHub pages environment [sage31.github.io/ucce-composting/src/pages/home.html](https://sage31.github.io/ucce-composting/src/pages/home.html).
+1. Visit the website in the GitHub pages environment [mshydlowski.github.io/ucce-composting/src/pages/home.html](https://mshydlowski.github.io/ucce-composting/src/pages/home.html).
 
 ## Technologies Used
 
