@@ -12,8 +12,7 @@ This calculator is a web application designed to help individuals track and calc
 
 ## How to Use
 
-1. Visit the website in the GitHub pages environment [mshydlowski.github.io/composting-education-program/ucce-composting-calculator/src/pages/home.html](https://mshydlowski.github.io/composting-education-program/ucce-composting-calculator/src/pages/home.html).
-
+1. Visit the website in the GitHub pages environment [mshydlowski.github.io/composting-education-program/ucce-composting-calculator/src/pages/home.html](https://composting-education-program.github.io/ucce-composting-calculator/)
 ## Technologies Used
 
 - Front-end: HTML, Tailwind CSS
